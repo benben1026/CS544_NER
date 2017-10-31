@@ -1,0 +1,18 @@
+Obama	PER	PER
+is	O	O
+awesome	ADJ	ADJ
+.	END	END
+
+Michelle	PER	PER
+is	O	O
+also	O	O
+awesome	ADJ	ADJ
+.	END	END
+
+Awesome	ADJ	ADJ
+is	O	O
+Obama	PER	PER
+and	O	O
+Michelle	PER	PER
+.	END	END
+
