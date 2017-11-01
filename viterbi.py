@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 def run_viterbi(emission_scores, trans_scores, start_scores, end_scores):
     """Run the Viterbi algorithm.
@@ -23,9 +24,33 @@ def run_viterbi(emission_scores, trans_scores, start_scores, end_scores):
     assert emission_scores.shape[1] == L
     N = emission_scores.shape[0]
 
+    best = [[0.0 for j in xrange(N)] for i in xrange(L)]
+    bt = [[-1 for j in xrange(N)] for i in xrange(L)]
+    for i in xrange(L):
+        best[i][0] = start_scores[i] + emission_scores[0, i]
+    for j in xrange(1, N):
+        for i_c in xrange(L):
+            max_score = -sys.maxint - 1
+            for i_p in xrange(L):
+                s = best[i_p][j - 1] + trans_scores[i_p][i_c] + emission_scores[j][i_c]
+                if s > max_score:
+                    max_score = s
+                    bt[i_c][j] = i_p
+            best[i_c][j] = max_score
+    for i in xrange(L):
+        best[i][-1] = best[i][-1] + end_scores[i]
+
+    score = -sys.maxint - 1
+    index = -1
+    for i in xrange(L):
+        if best[i][-1] > score:
+            index = i
+            score = best[i][-1]
+    j = N - 1
     y = []
-    for i in xrange(N):
-        # stupid sequence
-        y.append(i % L)
-    # score set to 0
-    return (0.0, y)
+    while index != -1:
+        y = [index] + y
+        index = bt[index][j]
+        j -= 1
+
+    return (score, y)
